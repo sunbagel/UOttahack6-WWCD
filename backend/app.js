@@ -163,6 +163,54 @@ app.put("/restaurants/:id", async (req, res) => {
   }
 });
 
+app.post("/delivery", async (req, res) => {
+
+  // body:
+  // accepted : t/f
+  // restaurantId
+  // kitchenId
+
+  const { accepted, restaurantId, kitchenId, item, itemQuantity } = req.body;
+  
+  if(accepted === false){
+    res.status(200).json({message: "Order successfully rejected"})
+    return;
+  }
+  try {
+    // Fetch Restaurant and Kitchen locations
+    const restaurant = await Restaurant.findById(restaurantId);
+    const kitchen = await SoupKitchen.findById(kitchenId);
+
+    if (!restaurant || !kitchen) {
+      res.status(404).json({ message: "Restaurant or Kitchen not found" });
+      return;
+    }
+
+    const message = {
+      restaurantId,
+      kitchenId,
+      restaurantLocation: restaurant.location.coordinates, // Assuming location is directly under the restaurant object
+      kitchenLocation: kitchen.location.coordinates,       // Assuming location is directly under the kitchen object
+      item,
+      itemQuantity
+    };
+
+    const topic = `delivery/${restaurantId}/${kitchenId}/${item}`;
+    // console.log(topic);
+    // console.log(message);
+    // Here, you would publish the message to the topic
+    solaceApp.publishMessage(topic, JSON.stringify(message));
+
+    res.json({message: "Delivery information published", data: message});
+  } catch (error) {
+    console.error("Failed to process delivery request:", error);
+    res.status(500).json({ error: error.message });
+  }
+
+
+
+})
+
 
 app.post('/subscribe', (req, res) => {
   solaceApp.subscribeToTopic(`restaurants/65e3ffcc3770b8e651dec385/ingredients/milk`);

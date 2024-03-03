@@ -46,6 +46,25 @@ restaurants/${restaurantId}/ingredients/${ingredientName}/update
 Kitchens subscribe to these restaurants. Kitchens select which restaurants that they'd like to subscribe to.
 
 
+### Make Delivery:
+
+```
+POST
+{
+    "accepted" : true
+    "restaurantId" : "65e3fdaeeff6e7686c994087",
+    "kitchenId" : "65e44134b1424a03c597d68f",
+    "item" : "milk",
+    "itemQuantity" : 3
+
+}
+```
+
+```
+PUBLISH
+`delivery/${restaurantId}/${kitchenId}/${item}`
+```
+
 
 
 
