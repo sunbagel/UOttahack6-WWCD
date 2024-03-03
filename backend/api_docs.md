@@ -31,6 +31,24 @@
 ### Restaurant / Kitchen Pubsub Model:
 
 ```
+PUT:
+ex.
+http://localhost:5000/restaurants/<tournamentId>
+http://localhost:5000/restaurants/65e3fdaeeff6e7686c994087
+{
+    "ingredients": {
+        "dairy": {
+            "milk": 3
+        },
+        "meats":{
+            "chickenBreasts": 4,
+            "groundBeef": 2
+        }
+    }
+}
+```
+
+```
 PUBLISH:
 restaurants/<restaurant_id>/ingredients/<ingredient_name>/update
 
@@ -45,6 +63,25 @@ restaurants/${restaurantId}/ingredients/${ingredientName}/update
 ```
 Kitchens subscribe to these restaurants. Kitchens select which restaurants that they'd like to subscribe to.
 
+
+### Make Delivery:
+
+```
+POST
+{
+    "accepted" : true
+    "restaurantId" : "65e3fdaeeff6e7686c994087",
+    "kitchenId" : "65e44134b1424a03c597d68f",
+    "item" : "milk",
+    "itemQuantity" : 3
+
+}
+```
+
+```
+PUBLISH
+`delivery/${restaurantId}/${kitchenId}/${item}`
+```
 
 
 
