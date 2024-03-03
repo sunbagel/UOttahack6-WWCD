@@ -31,6 +31,24 @@
 ### Restaurant / Kitchen Pubsub Model:
 
 ```
+PUT:
+ex.
+http://localhost:5000/restaurants/<tournamentId>
+http://localhost:5000/restaurants/65e3fdaeeff6e7686c994087
+{
+    "ingredients": {
+        "dairy": {
+            "milk": 3
+        },
+        "meats":{
+            "chickenBreasts": 4,
+            "groundBeef": 2
+        }
+    }
+}
+```
+
+```
 PUBLISH:
 restaurants/<restaurant_id>/ingredients/<ingredient_name>/update
 
