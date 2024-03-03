@@ -2,40 +2,39 @@
 import '../styles/Home.css'
 
 const Home = () => {
-
     return (
-        <div>
-            <header>
-                <h1>Leftover Goodness</h1>
-                <nav>
-                <ul>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-                </nav>
-            </header>
-            <section id="about">
-                <div>
-                <h2>About Us</h2>
-                <p>Welcome to Leftover Goodness! We are dedicated to reducing food waste and supporting local communities by connecting leftover ingredients with nearby soup kitchens.</p>
-                <p>Every day, tons of perfectly good food goes to waste. Our platform allows individuals and businesses to donate their surplus ingredients to those in need, making a positive impact on both the environment and society.</p>
-                </div>
-            </section>
-            <section id="contact">
-                <div>
-                <h2>Contact Us</h2>
-                <p>Interested in learning more or getting involved? Contact us today!</p>
-                <button>Contact Us</button>
-                <p>Or sign up to start donating now!</p>
-                <button>Sign Up</button>
-                </div>
-            </section>
-            <footer>
-                <p>&copy; 2024 Leftover Goodness. All rights reserved.</p>
-            </footer>
-
+      <div className="container flex flex-col mx-auto items-center justify-center min-h-screen">
+        
+     
+        <div className="p-12 bg-orange-300 bg-opacity-50 backdrop-filter backdrop-blur-md rounded-lg shadow-lg overflow-hidden min-w-full max-w-4xl">
+        <div className="flex flex-row items-center justify-center w-full">
+        
+          <div className="flex flex-col w-1/2 space-y-4">
+            <h1 className="text-5xl font-bold">Chicken Dinner</h1>
+            <p className="text-xl">Turning leftovers into community treasures — a sustainable path from excess to access.</p>
+            <div className="flex space-x-4">
+              <button className="px-6 py-2 bg-black text-white rounded">Get Started</button>
+              <button className="px-6 py-2 bg-transparent text-black rounded border border-black">Learn More</button>
+            </div>
+          </div>
+        
+          <div className="w-1/2 flex justify-center">
+            <img src="" alt="Chicken Logo" className="max-w-sm"/>
+          </div>
         </div>
-    )
-}
+        </div>
 
-export default Home
+        <div>
+            Leftover Goodness is an innovative platform dedicated to transforming the way communities think about and handle food surplus. 
+            In a world where food waste and hunger coexist, our app serves as a vital bridge, connecting restaurants, grocery stores, and households with surplus food 
+            to soup kitchens and food banks in need. By leveraging real-time technology and a user-friendly interface, Leftover Goodness facilitates the donation of excess food,
+             ensuring that it reaches those who can benefit from it most, rather than going to waste. Our mission is not only to alleviate hunger but also to foster a culture of 
+             sustainability and sharing, making our communities stronger and our environmental footprint smaller. Join us in our journey to make food waste a thing of the past, 
+             turning every leftover into a step towards a better future.
+        </div>
+      </div>
+    );
+  }
+  
+
+export default Home;
