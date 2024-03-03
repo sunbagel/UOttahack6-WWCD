@@ -28,6 +28,23 @@
 ```
 
 
+### Restaurant / Kitchen Pubsub Model:
+
+```
+PUBLISH:
+restaurants/<restaurant_id>/ingredients/<ingredient_name>/update
+
+```
+Restaurants publish their ingredients to this topic.
+
+
+```
+SUBSCRIBE:
+restaurants/${restaurantId}/ingredients/${ingredientName}/update
+
+```
+Kitchens subscribe to these restaurants. Kitchens select which restaurants that they'd like to subscribe to.
+
 
 
 
