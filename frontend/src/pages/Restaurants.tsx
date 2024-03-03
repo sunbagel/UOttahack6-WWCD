@@ -1,16 +1,11 @@
-
-
-
 const Restaurants = () => {
 
     return (
-        <div>
-            Restaurants Page
-        </div>
+      <div>
+
+      </div>
     )
-
 }
-
 
 export default Restaurants
 

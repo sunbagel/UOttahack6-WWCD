@@ -1,9 +1,11 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 import SoupKitchen from './models/soupKitchen.js';
 import Restaurant from './models/restaurant.js';
+import Driver from './models/driver.js'
 import solaceApp from './SolaceApp.js';
 
 const uri = "mongodb+srv://admin:soup@wwcd.bzatisb.mongodb.net/?retryWrites=true&w=majority&appName=wwcd";
@@ -32,6 +34,7 @@ async function run() {
 run().catch(console.dir);
 const app = express();
 app.use(express.json());
+app.use(cors());
 const port = 5000;
 
 solaceApp.initialize();
@@ -53,9 +56,8 @@ app.get('/soup_kitchens', async (req, res) => {
   } catch(err){
     res.status(500).json({error: err.message})
   }
-
-
 })
+
 
 app.post("/soup_kitchens", async (req, res) => {
     console.log(req.body);
@@ -66,9 +68,25 @@ app.post("/soup_kitchens", async (req, res) => {
     } catch(err){
       res.status(500).json({error: err.message})
     }
-   
-    
-    
+});
+
+app.get('/soup_kitchens/:id?', async (req, res) => {
+  try {
+    if (req.params.id) {
+      // If ID is provided, fetch a specific soup kitchen by ID
+      const kitchen = await SoupKitchen.findById(req.params.id);
+      if (!kitchen) {
+        return res.status(404).json({ error: 'Soup kitchen not found' });
+      }
+      return res.status(200).json(kitchen);
+    } else {
+      // If no ID provided, fetch all soup kitchens
+      const kitchens = await SoupKitchen.find();
+      res.status(200).json(kitchens);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 
@@ -163,6 +181,26 @@ app.put("/restaurants/:id", async (req, res) => {
   }
 });
 
+app.get("/drivers", async (req, res) => {
+  try{
+    const drivers = await Driver.find();
+    res.status(200).json(drivers)
+  } catch(err){
+    res.status(500).json({error: err.message})
+  }
+})
+
+app.post("/drivers", async (req, res) => {
+  const newDriver = new Driver(req.body);
+  try{
+    const savedDriver = await newDriver.save();
+    res.json(savedDriver);
+  } catch(err){
+    res.status(500).json({error: err.message})
+  } 
+
+})
+
 app.post("/delivery", async (req, res) => {
 
   // body:
@@ -170,7 +208,7 @@ app.post("/delivery", async (req, res) => {
   // restaurantId
   // kitchenId
 
-  const { accepted, restaurantId, kitchenId, item, itemQuantity } = req.body;
+  const { accepted, driverId, restaurantId, kitchenId, item, itemQuantity } = req.body;
   
   if(accepted === false){
     res.status(200).json({message: "Order successfully rejected"})
@@ -186,14 +224,25 @@ app.post("/delivery", async (req, res) => {
       return;
     }
 
+    console.log(driverId);
+    const delivery = {
+        restaurantName : restaurant.name,
+        kitchenName : kitchen.name,
+        restaurantLocation: restaurant.location.coordinates, // Assuming location is directly under the restaurant object
+        kitchenLocation: kitchen.location.coordinates,       // Assuming location is directly under the kitchen object
+        item,
+        itemQuantity
+    }
+
     const message = {
       restaurantId,
       kitchenId,
-      restaurantLocation: restaurant.location.coordinates, // Assuming location is directly under the restaurant object
-      kitchenLocation: kitchen.location.coordinates,       // Assuming location is directly under the kitchen object
-      item,
-      itemQuantity
+      driverId,
+      ...delivery
+      
     };
+
+    const updatedDriver = await Driver.findByIdAndUpdate(driverId, {delivery}, { new: true });
 
     const topic = `delivery/${restaurantId}/${kitchenId}/${item}`;
     // console.log(topic);
@@ -201,7 +250,7 @@ app.post("/delivery", async (req, res) => {
     // Here, you would publish the message to the topic
     solaceApp.publishMessage(topic, JSON.stringify(message));
 
-    res.json({message: "Delivery information published", data: message});
+    res.json({message: "Delivery information published", data: message, driver: updatedDriver});
   } catch (error) {
     console.error("Failed to process delivery request:", error);
     res.status(500).json({ error: error.message });

@@ -16,9 +16,23 @@ const driverSchema = new mongoose.Schema({
           required: true,
           index: '2dsphere' // Create a special 2dsphere index on `coordinates`
         }
+    },
+    delivery : {
+      restaurantName : String,
+      kitchenName : String,
+      restaurantLocation: {
+        type: [Number],
+        index: '2dsphere'
+      },
+      kitchenLocation: {
+        type: [Number],
+        index: '2dsphere' // Create a special 2dsphere index on `coordinates`
+      },
+      item : String,
+      itemQuantity : Number
     }
 });
 
-const Driver = mongoose.Model("Driver", driverSchema)
+const Driver = mongoose.model("Driver", driverSchema)
 
 export default Driver
