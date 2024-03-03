@@ -69,7 +69,8 @@ Kitchens subscribe to these restaurants. Kitchens select which restaurants that 
 ```
 POST
 {
-    "accepted" : true
+    "accepted" : true,
+    "driverId" : "65e446ca5e19f81b8da07328",
     "restaurantId" : "65e3fdaeeff6e7686c994087",
     "kitchenId" : "65e44134b1424a03c597d68f",
     "item" : "milk",
