@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 
 import SoupKitchen from './models/soupKitchen.js';
 import Restaurant from './models/restaurant.js';
+import solaceApp from './SolaceApp.js';
 
 const uri = "mongodb+srv://admin:soup@wwcd.bzatisb.mongodb.net/?retryWrites=true&w=majority&appName=wwcd";
 
@@ -32,6 +33,8 @@ run().catch(console.dir);
 const app = express();
 app.use(express.json());
 const port = 5000;
+
+solaceApp.initialize();
 
 
 mongoose.connect(uri)
@@ -136,7 +139,15 @@ app.put("/restaurants/:id", async (req, res) => {
 });
 
 
+app.post('/subscribe', (req, res) => {
+  solaceApp.subscribeToTopic("SomeTopic");
+  res.status(200).send('{"result":"ok"}');
+});
 
-
-
-
+// Publish example
+app.post('/publish', (req, res) => {
+  let message = JSON.stringify({text: "Hello"});
+  let topic = "SomeTopic";
+  solaceApp.publishMessage(topic, message);
+  res.status(200).send('{"result":"ok"}');
+});
