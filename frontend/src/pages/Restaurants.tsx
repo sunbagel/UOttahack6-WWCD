@@ -9,7 +9,7 @@ type Delivery = {
 }
 
 const apiUrl = 'http://localhost:5000';
-const id = '65e3ffcc3770b8e651dec385';
+let id = '65e3faec8a41765ed19205d5';
 
 const Restaurants = () => {
     const [soupKitchen, setSoupKitchen] = useState(null);
@@ -17,8 +17,9 @@ const Restaurants = () => {
     useEffect(() => {
         const fetchSoupKitchen = async () => {
         try {
-            const response = await axios.get(`${apiUrl}/restaurants/${id}`);
-            setSoupKitchen(response.data);
+            const response = await axios.get(`${apiUrl}/restaurants/`);
+            setSoupKitchen(response.data[0]);
+            id = soupKitchen?._id;
         } catch (error) {
             console.error('Error fetching soup kitchen:');
         }
@@ -30,8 +31,8 @@ const Restaurants = () => {
 
     const handleUpdate = async () => {
         // Refresh soup kitchen data after updating quantities
-        const response = await axios.get(`${apiUrl}/restaurants/${id}`);
-        setSoupKitchen(response.data);
+        const response = await axios.get(`${apiUrl}/restaurants/`);
+        setSoupKitchen(response.data[0]);
     };
     
     const handleMinusClick = async (category: string, ingredient) => {
@@ -48,6 +49,7 @@ const Restaurants = () => {
 
     const handlePlusClick = async (category: string, ingredient) => {
     // Call the endpoint to update the quantity
+    console.log(category, ingredient);
         await axios.put(`${apiUrl}/restaurants/${id}`, {
             $inc: {
                 [`ingredients.${category}.${ingredient}`]: 1,
@@ -58,14 +60,10 @@ const Restaurants = () => {
         handleUpdate();
     };
 
-    const submitOrder = async () => {
-        // insert logic here
-    }
 
-
-    const sendIngredientsList = async (ingredients) => {
+    const submitOrder = async (ingredients) => {
         try {
-            await axios.put(`${import.meta.env.VITE_API_SERVER}/restaurants/65e3ffcc3770b8e651dec385`, ingredients);
+            await axios.put(`${import.meta.env.VITE_API_SERVER}/restaurants/${id}`, soupKitchen);
         } catch (error) {
             console.log(error);
         }
@@ -114,7 +112,7 @@ const Restaurants = () => {
     className="btn bg-light-blue self-end"
     onClick={submitOrder}
   >
-    submit order
+    update ingredients
   </button>
   {soupKitchen &&
     Object.entries(soupKitchen.ingredients).map(([category, items]) => (
