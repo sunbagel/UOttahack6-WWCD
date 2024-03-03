@@ -22,9 +22,9 @@ const NavBar = () => {
             {/* links */}
             <div className="flex flex-col md:flex-row md:ml-6">
                 <Link to="/" className="navbar-link">Home</Link>
-                <Link to="/Restaurants" className="navbar-link">Restaurants</Link>
-                <Link to="/Kitchens" className="navbar-link">Soup Kitchens</Link>
-                <Link to="/Drivers" className="navbar-link">Drivers</Link>
+                <Link to="/restaurants" className="navbar-link">Restaurants</Link>
+                <Link to="/kitchens" className="navbar-link">Soup Kitchens</Link>
+                <Link to="/delivery" className="navbar-link">Delivery</Link>
             </div>
 
         </div>
