@@ -52,7 +52,7 @@ function Login() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:bg-indigo-700"
+            className="w-full py-2 px-4 bg-light-blue text-white rounded-lg hover:bg-orange-300 focus:outline-none focus:bg-indigo-700"
           >
             Login
           </button>

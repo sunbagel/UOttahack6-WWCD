@@ -1,12 +1,24 @@
 import { useEffect, useState } from "react"
 import messaging from "../solace/Messaging"
 import Card from "../components/ingredientCard";
-
-type Delivery = {
+import Places from '../components/Places'
+import { useLoadScript } from "@react-google-maps/api";type Delivery = {
     payloadString: string;
 }
 
 const Delivery = () => {
+    const [selectedAddress, setSelectedAddress] = useState<string>('');
+
+    const handleAddressChange = (address: string) => {
+        setSelectedAddress(address);
+    };
+
+    const { isLoaded, loadError } = useLoadScript({
+        googleMapsApiKey: 'AIzaSyAEk5Gar3yJSumyMCD2cfufCefHF9QXUIM',
+        libraries: ["places"],
+    });
+
+    
     const [deliveries, setDeliveries] = useState<Array<unknown>>([]);
     const [connected, setConnected] = useState(false);
     const handleMessage = (message: Delivery) => {
@@ -33,9 +45,6 @@ const Delivery = () => {
 		message.destinationName = "accept";
 		messaging.send(message);
 	}
-    useEffect(() => {
-        console.log(deliveries);
-    }, [deliveries])
     const sendButton = connected ? <button onClick={handleSendClick}>Send</button> : <button disabled>Send</button>;
 
     const onAccept = (idx) => {
@@ -44,13 +53,45 @@ const Delivery = () => {
     const onDecline = (idx) => {
         setDeliveries(deliveries.filter((_, i) => i != idx));
     }
-
+    useEffect(() => {
+        console.log(deliveries);
+    }, [deliveries])
+    if (loadError) return <div>Error loading Google Maps API</div>;
+    if (!isLoaded) return <div>Loading...</div>;
     return (
-        <div>
+        <div className="min-h-screen">
             <div className="buttons">
                 <button onClick={handleConnectClick}>{connected ? 'Disconnect' : 'Connect'}</button>
                 {/* {sendButton} */}
             </div>
+            {/*Set location*/}
+            
+            <br></br>
+            
+            <div className="w-full flex justify-center">
+                <div className="max-w-screen-lg w-full px-4">
+                    <div>
+                        <label htmlFor="addressInput" className="mr-2">Location:</label>
+                        <Places setAddress={handleAddressChange} /> 
+                        <input
+                            id="addressInput"
+                            type="text"
+                            style={{ width: '900px' }}
+                            value={selectedAddress}
+                            onChange={(e) => handleAddressChange(e.target.value)}
+                            className="flex-1"
+                        /> 
+                    </div>
+                </div>
+            </div>
+            <br></br>
+            {/* Map */}
+            <div className="h-2/3">
+                <br></br>
+                <img src="https://i.stack.imgur.com/RdkOb.jpg" alt="Map" className="w-full" />
+            </div>
+            {/* Delivery Info Boxes */}
+            
             <div className="flex row-auto">
                 {deliveries.map((d, idx) => (
                     <div key={idx} className="max-w-xs bg-white shadow-lg rounded-lg overflow-hidden m-4">
