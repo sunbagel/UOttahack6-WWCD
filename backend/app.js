@@ -3,6 +3,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 
 import SoupKitchen from './models/soupKitchen.js';
+import Restaurant from './models/restaurant.js';
 
 const uri = "mongodb+srv://admin:soup@wwcd.bzatisb.mongodb.net/?retryWrites=true&w=majority&appName=wwcd";
 
@@ -55,10 +56,7 @@ app.get('/soup_kitchens', async (req, res) => {
 
 app.post("/soup_kitchens", async (req, res) => {
     console.log(req.body);
-    const newSoupKitchen = new SoupKitchen({
-        "name": "Sample Soup Kitchen"
-      }
-      );
+    const newSoupKitchen = new SoupKitchen(req.body);
     try{
       const savedSoupKitchen = await newSoupKitchen.save();
       res.json(savedSoupKitchen);
@@ -91,4 +89,54 @@ app.put("/soup_kitchens/:id", async (req, res) => {
       res.status(500).json({ error: err.message });
   }
 });
+
+
+app.get("/restaurants", async (req, res) =>{
+  try{
+    const restaurants = await Restaurant.find();
+    res.status(200).json(restaurants)
+  } catch(err){
+    res.status(500).json({error: err.message})
+  }
+})
+
+app.post("/restaurants", async (req, res) => {
+  console.log(req.body);
+  // NO VALIDATION
+  const newRestaurant = new Restaurant(req.body);
+  try{
+    const savedRestaurant = await newRestaurant.save();
+    res.json(savedRestaurant);
+  } catch(err){
+    res.status(500).json({error: err.message})
+  } 
+});
+
+
+
+app.put("/restaurants/:id", async (req, res) => {
+  const { id } = req.params; // Get the id from the URL
+  const updates = req.body; // Assuming this contains the fields to update
+
+  console.log(updates)
+
+  try {
+      // Find the document by id and update it with the values provided in the request body
+      // { new: true } option returns the document after update
+      const updatedRestaurant = await Restaurant.findByIdAndUpdate(id, updates, { new: true });
+
+      if (!updatedRestaurant) {
+          return res.status(404).send("Soup kitchen not found.");
+      }
+
+      res.json(updatedRestaurant);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+});
+
+
+
+
+
 

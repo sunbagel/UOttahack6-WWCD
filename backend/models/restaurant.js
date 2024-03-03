@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const soupKitchenSchema = new mongoose.Schema({
+const restaurantSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
@@ -35,7 +35,7 @@ const soupKitchenSchema = new mongoose.Schema({
             onions: { type: Number, default: 0 },
         },
         meats: {
-            chickenBreast: { type: Number, default: 0 },
+            chickenBreasts: { type: Number, default: 0 },
             groundBeef: { type: Number, default: 0 },
             porkLoin: { type: Number, default: 0 },
         },
@@ -48,11 +48,16 @@ const soupKitchenSchema = new mongoose.Schema({
             rice: { type: Number, default: 0 },
             pasta: { type: Number, default: 0 },
             cereal: { type: Number, default: 0 },
-        }
+        },
     }
-    
-});
+        
+})
 
-const SoupKitchen = mongoose.model("SoupKitchen", soupKitchenSchema)
 
-export default SoupKitchen;
+const Restaurant = mongoose.model("Restaurant", restaurantSchema)
+
+export default Restaurant;
+
+
+
+
