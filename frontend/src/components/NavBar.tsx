@@ -21,9 +21,8 @@ const NavBar = () => {
   }
 
   return (
-    
     <nav className="bg-orange-500 bg-opacity-50 shadow-md">
-      <div className="container h-5/6 mx-auto px-6 py-8 flex justify-between items-center">
+      <div className="container h-5/6 mx-auto px-6 py-6 flex justify-between items-center">
         <Link to="/" className="flex items-center text-gray-800 text-xl font-bold">
             {/* <img src="../../debatedino.png" alt="Logo" className="h-8"/> */}
             <span className="self-center whitespace-nowrap">ChickenDinner</span>
@@ -43,10 +42,10 @@ const NavBar = () => {
                   </>
                 )}
                 {username === 'McDonalds' && (
-                    <Link to="/restaurants" className="navbar-link">Restaurants</Link>
+                    <Link to="/restaurants" className="navbar-link">Leftover management</Link>
                 )}
                 {username === 'SoupKitchen' && (
-                  <Link to="/kitchens" className="navbar-link">Soup Kitchens</Link>
+                  <Link to="/kitchens" className="navbar-link">Shopping cart</Link>
                 )}
                 {username === 'John Delivery' && (
                   <Link to="/delivery" className="navbar-link">Delivery</Link>

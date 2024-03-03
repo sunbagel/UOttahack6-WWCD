@@ -17,7 +17,7 @@ const Home = () => {
           </div>
         
           <div className="w-1/2 flex justify-center">
-            <img src="" alt="Chicken Logo" className="max-w-sm"/>
+            <img src="../../images/logo.png" alt="Chicken Logo" className="max-w-sm"/>
           </div>
         </div>
         </div>
