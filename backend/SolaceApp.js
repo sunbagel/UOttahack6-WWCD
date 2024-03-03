@@ -20,20 +20,23 @@ class SolaceApp {
     messageHandler(topicString, messageString){
         console.log("New message on topic:", topicString, "::", messageString);
         // Here is where you add code to handle the message
-        switch (topicString) {
-            case 'SomeTopic': {
-                const message = JSON.parse(messageString);
-                console.log("Message as object", message);
-                break;
-            }
-            default: {
-                console.warn("Unexpected topic", topicString);
-                break;
-            }
-        }
+        // switch (topicString) {
+        //     case 'SomeTopic': {
+        //         const message = JSON.parse(messageString);
+        //         console.log("Message as object", message);
+        //         break;
+        //     }
+        //     default: {
+        //         console.warn("Unexpected topic", topicString);
+        //         break;
+        //     }
+        // }
+        const message = JSON.parse(messageString);
+        console.log("Message as object", message);
     }
 
     publishMessage(topic, message) {
+        console.log("PUBLISHED")
         messagingClient.publish(topic, message);
     }
 

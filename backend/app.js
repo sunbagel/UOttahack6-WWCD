@@ -121,7 +121,7 @@ app.put("/restaurants/:id", async (req, res) => {
   const { id } = req.params; // Get the id from the URL
   const updates = req.body; // Assuming this contains the fields to update
 
-  console.log(updates)
+  // console.log(updates)
 
   try {
       // Find the document by id and update it with the values provided in the request body
@@ -132,7 +132,32 @@ app.put("/restaurants/:id", async (req, res) => {
           return res.status(404).send("Soup kitchen not found.");
       }
 
-      res.json(updatedRestaurant);
+      let updatedIngredients = [];
+      for(const category in updates.ingredients){
+        // console.log('hi');
+        // console.log(updates.ingredients[category]);
+        for(const name in updates.ingredients[category]){
+          // console.log(name, updates.ingredients[category][name])
+          updatedIngredients.push({name, quantity: updates.ingredients[category][name]})
+        }
+      }
+
+      // console.log(updatedIngredients)
+
+      updatedIngredients.forEach(ingredient => {
+        const message = {
+          restaurantId: id,
+          ingredient: ingredient.name,
+          quantity: ingredient.quantity,
+        };
+        // Construct the topic name based on the ingredient
+        const topic = `restaurants/${id}/ingredients/${ingredient.name}`;
+       // console.log(topic);
+        solaceApp.publishMessage(topic, JSON.stringify(message));
+      });
+
+      res.status(200).json(updatedRestaurant);
+
   } catch (err) {
       res.status(500).json({ error: err.message });
   }
@@ -140,7 +165,7 @@ app.put("/restaurants/:id", async (req, res) => {
 
 
 app.post('/subscribe', (req, res) => {
-  solaceApp.subscribeToTopic("SomeTopic");
+  solaceApp.subscribeToTopic(`restaurants/65e3ffcc3770b8e651dec385/ingredients/milk`);
   res.status(200).send('{"result":"ok"}');
 });
 
