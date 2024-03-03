@@ -121,7 +121,7 @@ app.put("/restaurants/:id", async (req, res) => {
   const { id } = req.params; // Get the id from the URL
   const updates = req.body; // Assuming this contains the fields to update
 
-  console.log(updates)
+  // console.log(updates)
 
   try {
       // Find the document by id and update it with the values provided in the request body
@@ -132,15 +132,88 @@ app.put("/restaurants/:id", async (req, res) => {
           return res.status(404).send("Soup kitchen not found.");
       }
 
-      res.json(updatedRestaurant);
+      let updatedIngredients = [];
+      for(const category in updates.ingredients){
+        // console.log('hi');
+        // console.log(updates.ingredients[category]);
+        for(const name in updates.ingredients[category]){
+          // console.log(name, updates.ingredients[category][name])
+          updatedIngredients.push({name, quantity: updates.ingredients[category][name]})
+        }
+      }
+
+      // console.log(updatedIngredients)
+
+      updatedIngredients.forEach(ingredient => {
+        const message = {
+          restaurantId: id,
+          ingredient: ingredient.name,
+          quantity: ingredient.quantity,
+        };
+        // Construct the topic name based on the ingredient
+        const topic = `restaurants/${id}/ingredients/${ingredient.name}`;
+       // console.log(topic);
+        solaceApp.publishMessage(topic, JSON.stringify(message));
+      });
+
+      res.status(200).json(updatedRestaurant);
+
   } catch (err) {
       res.status(500).json({ error: err.message });
   }
 });
 
+app.post("/delivery", async (req, res) => {
+
+  // body:
+  // accepted : t/f
+  // restaurantId
+  // kitchenId
+
+  const { accepted, restaurantId, kitchenId, item, itemQuantity } = req.body;
+  
+  if(accepted === false){
+    res.status(200).json({message: "Order successfully rejected"})
+    return;
+  }
+  try {
+    // Fetch Restaurant and Kitchen locations
+    const restaurant = await Restaurant.findById(restaurantId);
+    const kitchen = await SoupKitchen.findById(kitchenId);
+
+    if (!restaurant || !kitchen) {
+      res.status(404).json({ message: "Restaurant or Kitchen not found" });
+      return;
+    }
+
+    const message = {
+      restaurantId,
+      kitchenId,
+      restaurantLocation: restaurant.location.coordinates, // Assuming location is directly under the restaurant object
+      kitchenLocation: kitchen.location.coordinates,       // Assuming location is directly under the kitchen object
+      item,
+      itemQuantity
+    };
+
+    const topic = `delivery/${restaurantId}/${kitchenId}/${item}`;
+    // console.log(topic);
+    // console.log(message);
+    // Here, you would publish the message to the topic
+    solaceApp.publishMessage(topic, JSON.stringify(message));
+
+    res.json({message: "Delivery information published", data: message});
+  } catch (error) {
+    console.error("Failed to process delivery request:", error);
+    res.status(500).json({ error: error.message });
+  }
+
+
+
+})
+
 
 app.post('/subscribe', (req, res) => {
-  solaceApp.subscribeToTopic("SomeTopic");
+  solaceApp.subscribeToTopic(`restaurants/65e3ffcc3770b8e651dec385/ingredients/milk`);
   res.status(200).send('{"result":"ok"}');
 });
 
