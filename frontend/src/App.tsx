@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import './App.css'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
@@ -8,7 +8,7 @@ import Kitchens from './pages/Kitchens'
 import Delivery from './pages/Delivery'
 import Login from './pages/Login'
 import Register from './pages/Register'
-
+import messaging from './solace/Messaging.ts';
 
 function App() {
 

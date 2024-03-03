@@ -2,6 +2,7 @@ import options from "./messaging-options";
 import Paho from "paho-mqtt";
 
 class Messaging extends Paho.Client {
+	callbacks: never[];
 
 	constructor() {
 		super(options.invocationContext.host, Number(options.invocationContext.port), options.invocationContext.clientId);

@@ -12,8 +12,8 @@ const NavBar = () => {
     if (sessionStorage.getItem('username') ) {
       setUsername(sessionStorage.getItem('username'));
     }
-    console.log(sessionStorage.getItem('username'));
-    console.log(username);
+    // console.log(sessionStorage.getItem('username'));
+    // console.log(username);
   }, [username])
 
   const signout = () => {
