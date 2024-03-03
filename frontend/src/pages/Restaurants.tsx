@@ -19,7 +19,7 @@ const Restaurants = () => {
         try {
             const response = await axios.get(`${apiUrl}/restaurants/`);
             setSoupKitchen(response.data[0]);
-            id = soupKitchen?._id;
+            id = response.data[0]?._id;
         } catch (error) {
             console.error('Error fetching soup kitchen:');
         }
@@ -105,7 +105,7 @@ const Restaurants = () => {
         <div className="p-4 flex flex-col">
             <div className="buttons">
 					<button onClick={handleConnectClick}>{connected ? 'Disconnect' : 'Connect'}</button>
-					{sendButton}
+					{/* {sendButton} */}
 				</div>
   <button
     type="button"

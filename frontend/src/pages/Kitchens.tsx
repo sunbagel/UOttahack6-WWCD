@@ -59,7 +59,23 @@ const Kitchens = () => {
     };
 
     const submitOrder = async () => {
-        // insert logic here
+        console.log(soupKitchen);
+        for (const category in soupKitchen?.ingredients) {
+            const items = soupKitchen.ingredients[category]
+            for (const item in items) {
+                console.log(items[item], item)
+                if (items[item] > 0) {
+                    await axios.post(`${apiUrl}/delivery`, {
+                        accepted: true,
+                        driverId: "65e446ca5e19f81b8da07328",
+                        restaurantId: '65e3faec8a41765ed19205d5',
+                        kitchenId: "65e44396148cbca1b0fb9351",
+                        item: item,
+                        itemQuantity: items[item],
+                    });
+                }
+            }
+        }
     }
     const [ingredients, setIngredients] = useState<Array<unknown>>([]);
     const [connected, setConnected] = useState(false);
@@ -96,7 +112,7 @@ const Kitchens = () => {
         <div className="p-4 flex flex-col">
             <div className="buttons">
 					<button onClick={handleConnectClick}>{connected ? 'Disconnect' : 'Connect'}</button>
-					{sendButton}
+					{/* {sendButton} */}
 				</div>
   <button
     type="button"
