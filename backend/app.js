@@ -29,7 +29,8 @@ async function run() {
 }
 run().catch(console.dir);
 const app = express();
-const port = 3000;
+app.use(express.json());
+const port = 5000;
 
 
 mongoose.connect(uri)
@@ -40,63 +41,54 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.post("/addSoupKitchen", async (req, res) => {
+app.get('/soup_kitchens', async (req, res) => {
+
+  try{
+    const kitchens = await SoupKitchen.find();
+    res.status(200).json(kitchens)
+  } catch(err){
+    res.status(500).json({error: err.message})
+  }
+
+
+})
+
+app.post("/soup_kitchens", async (req, res) => {
     console.log(req.body);
     const newSoupKitchen = new SoupKitchen({
-        "name": "Sample Soup Kitchen",
-        "chickenWings": 5,
-        "oil": 2,
-        "salt": 1,
-        "blackPepper": 1,
-        "onion": 2,
-        "honey": 1,
-        "milk": 3,
-        "cheerios": 2,
-        "flour": 4,
-        "sugar": 2,
-        "pepper": 1,
-        "oliveOil": 3,
-        "butter": 2,
-        "eggs": 6,
-        "bakingPowder": 1,
-        "bakingSoda": 1,
-        "vanillaExtract": 1,
-        "soySauce": 2,
-        "vinegarWhite": 1,
-        "mustard": 1,
-        "ketchup": 2,
-        "mayonnaise": 2,
-        "garlic": 3,
-        "onions": 2,
-        "tomatoSaucePaste": 3,
-        "rice": 5,
-        "pasta": 3,
-        "cannedBeans": 2,
-        "quinoa": 1,
-        "lentils": 1,
-        "chickenBroth": 4,
-        "beefBroth": 3,
-        "cumin": 1,
-        "coriander": 1,
-        "paprika": 1,
-        "cinnamon": 1,
-        "basil": 1,
-        "oregano": 1,
-        "thyme": 1,
-        "stockCubesBouillon": 2,
-        "nuts": 1,
-        "cereal": 3,
-        "mapleSyrup": 1,
-        "peanutButter": 2,
-        "sourCream": 2,
-        "yogurt": 3,
-        "cheese": 4,
-        "blueberry": 2,
-        "strawberry": 2,
-        "lettuce": 1
+        "name": "Sample Soup Kitchen"
       }
       );
-    const savedSoupKitchen = await newSoupKitchen.save();
+    try{
+      const savedSoupKitchen = await newSoupKitchen.save();
+      res.json(savedSoupKitchen);
+    } catch(err){
+      res.status(500).json({error: err.message})
+    }
+   
     
-    res.json(savedSoupKitchen);
+    
 });
+
+
+app.put("/soup_kitchens/:id", async (req, res) => {
+  const { id } = req.params; // Get the id from the URL
+  const updates = req.body; // Assuming this contains the fields to update
+
+  console.log(updates)
+
+  try {
+      // Find the document by id and update it with the values provided in the request body
+      // { new: true } option returns the document after update
+      const updatedSoupKitchen = await SoupKitchen.findByIdAndUpdate(id, updates, { new: true });
+
+      if (!updatedSoupKitchen) {
+          return res.status(404).send("Soup kitchen not found.");
+      }
+
+      res.json(updatedSoupKitchen);
+  } catch (err) {
+      res.status(500).json({ error: err.message });
+  }
+});
+
