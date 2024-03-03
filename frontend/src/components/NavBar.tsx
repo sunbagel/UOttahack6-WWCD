@@ -3,7 +3,6 @@ import '../styles/NavBar.css';
 import { Link } from "react-router-dom";
 
 
-
 const NavBar = () => {
   
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
