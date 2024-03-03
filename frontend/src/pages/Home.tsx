@@ -4,8 +4,6 @@ import '../styles/Home.css'
 const Home = () => {
     return (
       <div className="container flex flex-col mx-auto items-center justify-center min-h-screen">
-        
-     
         <div className="p-12 bg-orange-300 bg-opacity-50 backdrop-filter backdrop-blur-md rounded-lg shadow-lg overflow-hidden min-w-full max-w-4xl">
         <div className="flex flex-row items-center justify-center w-full">
         

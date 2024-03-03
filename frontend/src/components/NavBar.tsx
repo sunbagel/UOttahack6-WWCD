@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 
 const NavBar = () => {
-  
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [username, setUsername] = useState<string | null>('');
   useEffect(() => {

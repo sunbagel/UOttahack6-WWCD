@@ -17,6 +17,7 @@ function Login() {
       sessionStorage.setItem('password', password);
       // setNavUsername(username);
       navigate('/');
+      window.location.reload();
     } 
   };
 

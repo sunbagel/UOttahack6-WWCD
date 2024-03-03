@@ -1,6 +1,7 @@
 import { MongoClient, ServerApiVersion } from 'mongodb';
 import express from 'express';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 import SoupKitchen from './models/soupKitchen.js';
 import Restaurant from './models/restaurant.js';
@@ -31,6 +32,7 @@ async function run() {
 run().catch(console.dir);
 const app = express();
 app.use(express.json());
+app.use(cors());
 const port = 5000;
 
 
@@ -50,9 +52,8 @@ app.get('/soup_kitchens', async (req, res) => {
   } catch(err){
     res.status(500).json({error: err.message})
   }
-
-
 })
+
 
 app.post("/soup_kitchens", async (req, res) => {
     console.log(req.body);
@@ -63,9 +64,25 @@ app.post("/soup_kitchens", async (req, res) => {
     } catch(err){
       res.status(500).json({error: err.message})
     }
-   
-    
-    
+});
+
+app.get('/soup_kitchens/:id?', async (req, res) => {
+  try {
+    if (req.params.id) {
+      // If ID is provided, fetch a specific soup kitchen by ID
+      const kitchen = await SoupKitchen.findById(req.params.id);
+      if (!kitchen) {
+        return res.status(404).json({ error: 'Soup kitchen not found' });
+      }
+      return res.status(200).json(kitchen);
+    } else {
+      // If no ID provided, fetch all soup kitchens
+      const kitchens = await SoupKitchen.find();
+      res.status(200).json(kitchens);
+    }
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 
