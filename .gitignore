@@ -1,2 +1,4 @@
 backend/.env
 backend/messaging-options.js
+
+backend/node_modules
