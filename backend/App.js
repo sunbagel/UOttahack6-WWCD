@@ -1,5 +1,5 @@
 
-import messagingClient from './Messaging';
+import messagingClient from './Messaging.js';
 
 class App {
 

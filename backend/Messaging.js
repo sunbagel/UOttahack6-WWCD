@@ -1,5 +1,5 @@
 import mqtt from 'mqtt';
-import options from './messaging-options';
+import options from './messaging-options.js';
 
 function messaging() {
     let client;
